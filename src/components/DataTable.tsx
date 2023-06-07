@@ -21,6 +21,7 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  isLoading?: boolean;
 }
 
 /**
@@ -28,12 +29,15 @@ interface DataTableProps<TData, TValue> {
  */
 export function DataTable<TData, TValue>({
   columns,
-  data
+  data,
+  isLoading
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
+  const loadingSkeletons = Array.from(Array(12));
+
   const table = useReactTable({
-    data,
+    data: isLoading ? loadingSkeletons : data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -65,18 +69,30 @@ export function DataTable<TData, TValue>({
             </TableRow>
           ))}
         </TableHeader>
-        <TableBody>
+        <TableBody className="min-h-[600px]">
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map(row => (
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >
-                {row.getVisibleCells().map(cell => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+                {row.getVisibleCells().map(cell => {
+                  return (
+                    <TableCell key={cell.id}>
+                      {isLoading ? (
+                        <div
+                          key={cell.id}
+                          className={`h-4 animate-pulse rounded bg-slate-800`}
+                        ></div>
+                      ) : (
+                        flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )
+                      )}
+                    </TableCell>
+                  );
+                })}
               </TableRow>
             ))
           ) : (
