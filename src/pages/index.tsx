@@ -1,6 +1,6 @@
 import { Manrope } from "next/font/google";
 import Head from "next/head";
-import { api } from "~/utils/api";
+import { TransactionsTable } from "../components/TransactionsTable";
 
 const manrope = Manrope({
   variable: "--manrope-font",
@@ -9,10 +9,6 @@ const manrope = Manrope({
 });
 
 const Home = () => {
-  const { data: transactions } = api.transactionsRouter.getAll.useQuery();
-
-  console.log(transactions);
-
   return (
     <>
       <Head>
@@ -23,12 +19,8 @@ const Home = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main
-        className={`${manrope.className} flex min-h-screen flex-col items-center justify-center `}
-      >
-        {transactions?.map(transaction => {
-          return <div key={transaction.id}>{transaction.gasCosts}</div>;
-        })}
+      <main className={`${manrope.className} h-screen bg-[#0a0a0a]`}>
+        <TransactionsTable />
       </main>
     </>
   );
