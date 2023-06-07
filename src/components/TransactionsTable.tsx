@@ -25,7 +25,9 @@ const columns: ColumnDef<OperatorTransaction>[] = [
     },
     cell: data => {
       const timeUnit = data.getValue<Date>();
-      return <>{dayjs(timeUnit).format("MMMM YYYY")}</>;
+      return (
+        <span className="pl-4">{dayjs(timeUnit).format("MMMM YYYY")}</span>
+      );
     }
   },
   {
@@ -43,7 +45,7 @@ const columns: ColumnDef<OperatorTransaction>[] = [
     },
     cell: data => {
       const gasCosts = data.getValue<Date>();
-      return <>{gasCosts.toLocaleString("en-US")}</>;
+      return <span className="pl-4">{gasCosts.toLocaleString("en-US")}</span>;
     }
   },
   {
@@ -61,7 +63,7 @@ const columns: ColumnDef<OperatorTransaction>[] = [
     },
     cell: data => {
       const gasCosts = data.getValue<Date>();
-      return <>{gasCosts.toLocaleString("en-US")}</>;
+      return <span className="pl-4">{gasCosts.toLocaleString("en-US")}</span>;
     }
   }
 ];
@@ -70,13 +72,18 @@ const columns: ColumnDef<OperatorTransaction>[] = [
  * Table displaying the transactions.
  */
 export const TransactionsTable = () => {
-  const { data: transactions } = api.transactionsRouter.getAll.useQuery();
+  const { data: transactions, isLoading } =
+    api.transactionsRouter.getAll.useQuery();
 
   return (
     <div className="container flex h-full flex-col items-center justify-center">
       <h2 className="mb-12 text-5xl font-bold">Monthly Transactions</h2>
-      <div className="flex w-full max-w-[800px] cursor-pointer items-center justify-center">
-        <DataTable columns={columns} data={transactions || []} />
+      <div className="flex w-full max-w-[800px] cursor-pointer items-center justify-center overflow-hidden rounded-md bg-[#0a0a0a]">
+        <DataTable
+          columns={columns}
+          data={transactions || []}
+          isLoading={isLoading}
+        />
       </div>
     </div>
   );
