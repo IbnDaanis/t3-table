@@ -113,6 +113,13 @@ export const TransactionsTable = () => {
   const { data: transactions, isLoading } =
     api.transactionsRouter.getAll.useQuery();
 
+  console.log(
+    "DATA: ",
+    transactions?.map(tran => ({
+      time: tran.timeUnit,
+      usdEarned: tran.usdEarned
+    }))
+  );
   return (
     <div className="container flex h-full flex-col items-center pt-[10rem]">
       <h2 className="mb-12 text-center text-3xl font-bold sm:text-4xl md:text-5xl">
